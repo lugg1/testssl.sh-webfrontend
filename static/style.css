@@ -1,19 +1,28 @@
-.notice {
-    position: relative;
-    bottom: 0px;
-    font-size: small;
-    text-align: center;
-    width: 100%;
-}
-
-.errormsg {
-    background-color: red;
-    padding: 10px;
-}
-
-.progress-style {
-    text-align: left;
-}
-.progress {
-    max-width: 68%;
-}
+.reset       {color: var(--gray-dark);}
+.bg-reset    {background-color: white;}
+.inverted    {color: white;}
+.bg-inverted {background-color: black;}
+.dimgray     {color: dimgray;}
+.red         {color: var(--red);}
+.green       {color: var(--green);}
+.yellow      {color: var(--yellow);}
+.blue        {color: var(--blue);}
+.purple      {color: var(--purple);}
+.cyan        {color: var(--teal);}
+.white       {color: var(--gray);}
+.bg-black    {background-color: var(--gray-dark);}
+.bg-red      {background-color: var(--red);}
+.bg-green    {background-color: var(--green);}
+.bg-yellow   {background-color: var(--yellow);}
+.bg-blue     {background-color: var(--blue);}
+.bg-purple   {background-color: var(--purple);}
+.bg-cyan     {background-color: var(--teal);}
+.bg-white    {background-color: var(--gray);}
+.underline   {text-decoration: underline;}
+.bold        {font-weight: bold;}
+.italic      {font-style: italic;}
+.blink       {text-decoration: blink;}
+.crossed-out {text-decoration: line-through;}
+.highlighted {filter: contrast(70%) brightness(190%);}
+pre {white-space: pre-wrap; white-space: -moz-pre-wrap !important;
+white-space: -pre-wrap; white-space: -o-pre-wrap; word-wrap: break-word;}

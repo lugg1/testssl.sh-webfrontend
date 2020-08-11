@@ -27,17 +27,17 @@ logDir = "log"
 resultDirJSON = "result/json"
 resultDirHTML = "result/html"
 checkCmd = "testssl.sh/testssl.sh"
-checkArgs = ["--quiet", "--logfile=" + logDir, "--jsonfile=" + resultDirJSON]
+checkArgs = ["--quiet", "--color", "3", "--add-ca", "/etc/ssl/certs/cbr-rootca.pem", "--logfile=" + logDir, "--jsonfile=" + resultDirJSON]
 checkTimeout = 300
 rendererCmd = "aha"
-rendererArgs = ["-n"]
+rendererArgs = ["--stylesheet", "--word-wrap", "--no-header" ,"--black"]
 rendererTimeout = 30
-protocols = ["ftp", "smtp", "pop3", "imap", "xmpp", "telnet", "ldap"]
+protocols = ["ftp", "smtp", "lmtp", "pop3", "imap", "xmpp", "xmpp-server", "telnet", "ldap", "nntp", "postgres", "mysql"]
 reHost = re.compile("^[a-zA-Z0-9_][a-zA-Z0-9_\-]+(\.[a-zA-Z0-9_\-]+)*$")
 preflightRequest = True
 preflightTimeout = 10
 application.debug = False
-application.secret_key = urandom(32)
+application.secret_key = "NrfzdBMXDOLomWZxPQIHGvgUcFRyAabY"
 #####################
 
 @application.route("/", methods=['GET', 'POST'])
@@ -66,20 +66,20 @@ def main():
 
         if 'starttls' in request.form and request.form['starttls'] == "yes":
             starttls = True
+            protocol = request.form['protocol']
+            if starttls and protocol not in protocols:
+                flash("Wrong protocol!")
+                ok = False
         else:
             starttls = False
 
-        protocol = request.form['protocol']
-        if starttls and protocol not in protocols:
-            flash("Wrong protocol!")
-            ok = False
 
-        if not ('confirm' in request.form and request.form['confirm'] == "yes"):
-            flash("You must confirm that you are authorized to scan the given system!")
-            ok = False
+        #if not ('confirm' in request.form and request.form['confirm'] == "yes"):
+        #    flash("You must confirm that you are authorized to scan the given system!")
+        #    ok = False
 
         if not os.path.isdir(resultDirJSON):
-            flash("JSON log directory not present?")
+            flash("JSON log directory not present")
             ok = False
 
         if not os.path.isdir(resultDirHTML):
@@ -94,7 +94,7 @@ def main():
                 s.connect((host, port))
                 s.close()
             except:
-                flash("Connection failed!")
+                flash("Connection test failed!")
                 ok = False
 
         if not ok:
@@ -113,19 +113,21 @@ def main():
         try:
             check = Popen(args, stdout=PIPE, stderr=PIPE)
             output, err = check.communicate(timeout=checkTimeout)
-            if check.returncode != 0:
-                output = err
-                flash("SSL Scan failed with error code " + str(check.returncode) + " - see below for details")
+            if check.returncode > 10:
+                #output = err
+                flash("SSL Scan failed with error code " + str(check.returncode) + " - " + str(err, 'utf-8'))
         except TimeoutExpired as e:
             flash("SSL Scan timed out")
             check.terminate()
 
         html = "<pre>" + str(output, 'utf-8') + "</pre>"
         try:
-            renderer = Popen([rendererCmd], stdin=PIPE, stdout=PIPE, stderr=PIPE)
+            rArgs = [rendererCmd]
+            rArgs += rendererArgs
+            renderer = Popen(rArgs, stdin=PIPE, stdout=PIPE, stderr=PIPE)
             html, err = renderer.communicate(input=output, timeout=rendererTimeout)
             if renderer.returncode != 0:
-                html = "<pre>" + str(err, 'utf-8') + "</pre>"
+                html = str(err, 'utf-8')
                 flash("HTML formatting failed with error code " + str(renderer.returncode) + " - see raw output below")
         except TimeoutExpired as e:
             flash("HTML formatting failed - see raw output below")

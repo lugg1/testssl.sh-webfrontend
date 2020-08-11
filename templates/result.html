@@ -1,12 +1,17 @@
 {% extends "app.html" %}
 {% block content %}
-<h1>Result</h1>
-{% for message in get_flashed_messages() %}
-<div class="errormsg">{{ message }}</div>
-{% endfor %}
-<div>
-{{ result | safe }}
+<div class="py-5 text-center">
+    <h1>Results</h1>
 </div>
-<hr>
-<a href="">New check</a>
+
+{% for message in get_flashed_messages() %}
+<div class="alert alert-danger">{{ message }}</div>
+{% endfor %}
+
+<pre class="bg-dark text-white rounded">
+    {{ result | safe }}
+</pre>
+
+<hr class="mb-4">
+<a href="" class="btn btn-secondary btn-lg btn-block">New check</a>
 {% endblock %}
