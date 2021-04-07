@@ -26,3 +26,22 @@
 .highlighted {filter: contrast(70%) brightness(190%);}
 pre {white-space: pre-wrap; white-space: -moz-pre-wrap !important;
 white-space: -pre-wrap; white-space: -o-pre-wrap; word-wrap: break-word;}
+
+@media print
+{
+    .bg-dark     {background-color: transparent !important;}
+    .text-white  {color: black !important;}
+    .reset       {color: black !important;}
+    .bg-reset    {background-color: transparent !important;}
+    .inverted    {color: white !important;}
+    .bg-inverted {background-color: black !important;}
+
+    ::-webkit-scrollbar {
+        display: none;
+    }
+
+    @page {
+        size: A4 portrait;
+        margin: 1cm;
+    }
+}

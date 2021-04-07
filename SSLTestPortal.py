@@ -27,18 +27,22 @@ logDir = "log"
 resultDirJSON = "result/json"
 resultDirHTML = "result/html"
 checkCmd = "testssl.sh/testssl.sh"
-checkArgs = ["--quiet", "--color", "3", "--add-ca", "/etc/ssl/certs/cbr-rootca.pem", "--logfile=" + logDir, "--jsonfile=" + resultDirJSON]
+checkArgs = ["--quiet", "--color", "3", "--logfile=" + logDir, "--jsonfile=" + resultDirJSON]
 checkTimeout = 300
 rendererCmd = "aha"
 rendererArgs = ["--stylesheet", "--word-wrap", "--no-header" ,"--black"]
 rendererTimeout = 30
-protocols = ["ftp", "smtp", "lmtp", "pop3", "imap", "xmpp", "xmpp-server", "telnet", "ldap", "nntp", "postgres", "mysql"]
-reHost = re.compile("^[a-zA-Z0-9_][a-zA-Z0-9_\-]+(\.[a-zA-Z0-9_\-]+)*$")
+protocols = ["ftp", "smtp", "lmtp", "pop3", "imap", "xmpp", "xmpp-server", "ldap", "nntp", "postgres", "mysql"] #"telnet", 
+reHost = re.compile(r"^[a-zA-Z0-9_][a-zA-Z0-9_\-]+(\.[a-zA-Z0-9_\-]+)*$")
 preflightRequest = True
 preflightTimeout = 10
 application.debug = False
 application.secret_key = "NrfzdBMXDOLomWZxPQIHGvgUcFRyAabY"
 #####################
+
+def escape_ansi(line):
+    ansi_escape = re.compile(r'(\x9B|\x1B\[)[0-?]*[ -\/]*[@-~]')
+    return ansi_escape.sub('', line)
 
 @application.route("/", methods=['GET', 'POST'])
 def main():
@@ -115,8 +119,8 @@ def main():
             output, err = check.communicate(timeout=checkTimeout)
             if check.returncode > 10:
                 #output = err
-                flash("SSL Scan failed with error code " + str(check.returncode) + " - " + str(err, 'utf-8'))
-        except TimeoutExpired as e:
+                flash("SSL Scan failed with error code " + str(check.returncode) + " - " + escape_ansi(str(err, 'utf-8')))
+        except TimeoutExpired:
             flash("SSL Scan timed out")
             check.terminate()
 

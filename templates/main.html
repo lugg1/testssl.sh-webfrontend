@@ -6,7 +6,7 @@
 </div>
 
 {% for message in get_flashed_messages() %}
-<div class="alert alert-danger">{{ message }}</div>
+<div class="alert bg-danger">{{ message }}</div>
 {% endfor %}
 
 <form method="POST" onsubmit="$('#spinner').show(); $('#button-label').hide(); $('#submit').prop('disabled', true);">
@@ -15,10 +15,10 @@
             <label for="host">Host</label>
             <div class="input-group mb-3">
                 <input type="text" name="host" class="form-control" id="host" placeholder="www.example.org" value=""
-                    required="">
+                    required="" spellcheck="false" autocorrect="off" autocapitalize="none" autocomplete="off" inputmode="url">
                 <span class="input-group-append input-group-prepend input-group-text rounded-0">:</span>
                 <input type="number" name="port" class="form-control col-2" id="port" min="0" max="65535" value="443"
-                    required="">
+                    required="" inputmode="numeric">
             </div>
         </div>
 
@@ -42,7 +42,7 @@
                     <option value="nntp">NNTP</option>
                     <option value="postgres">PostgreSQL</option>
                     <option value="mysql">MySQL</option>
-                    <option value="telnet">Telnet</option>
+                    <!-- <option value="telnet">Telnet</option> -->
                     <option value="xmpp">XMPP</option>
                     <option value="xmpp-server">XMPP-Server</option>
                 </select>

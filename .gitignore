@@ -1,0 +1,6 @@
+/.htaccess
+/log/*
+/result/html/*
+/result/json/*
+/.vscode
+/__pycache__
