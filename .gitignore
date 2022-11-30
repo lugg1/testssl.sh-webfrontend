@@ -4,3 +4,5 @@
 /result/json/*
 /.vscode
 /__pycache__
+/env/*
+.idea

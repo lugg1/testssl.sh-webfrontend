@@ -2,8 +2,8 @@
 
 This project is a web interface for [testssl.sh](https://testssl.sh/). It can be used to offer internal TLS/SSL configuration check portals, whereever the usual public tools are not applicable.
 
-![Webfrontend](/screenshots/testssl.sh-webfrontend.png)
-![Result](/screenshots/testssl.sh-result.png)
+![Webfrontend](screenshots/testssl.sh-webfrontend.png)
+![Result](screenshots/testssl.sh-result.png)
 
 ## Installation
 
@@ -34,5 +34,6 @@ You still have to autostart the script on boot. This can be done manually in a s
 
 ## Docker
 
-Markus Kraus ([@vMarkus_K](https://twitter.com/vMarkus_K)) created a [Docker
-Image](https://hub.docker.com/r/mycloudrevolution/testssl-webfrontend/).
+1. Create your container image by command `docker build --no-cache -t testssl.sh-webfrontend:latest .` on your local machine.
+2. Start the container `docker run -p 8080:8080 --rm testssl.sh-webfrontend:latest`
+3. Open the browser URL [http://localhost:8080](http://localhost:8080/)
