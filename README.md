@@ -7,7 +7,7 @@ This project is a web interface for [testssl.sh](https://testssl.sh/). It can be
 
 ## Installation
 
-1. Clone the [testssl.sh-webfrontend](https://github.com/TKCERT/testssl.sh-webfrontend) repository with its main dependency [testssl.sh](https://github.com/drwetter/testssl.sh) by invocation of `git clone --recursive https://github.com/TKCERT/testssl.sh-webfrontend.git`.
+1. Clone the [testssl.sh-webfrontend](https://github.com/lugg1/testssl.sh-webfrontend) repository with its main dependency [testssl.sh](https://github.com/drwetter/testssl.sh) by invocation of `git clone --recursive https://github.com/lugg1/testssl.sh-webfrontend.git`.
 2. Install Python 3 (`apt-get install python3`) and the Python module Flask by running `pip3 install flask`.
 3. Install [aha](https://github.com/theZiz/aha) (`apt-get install aha`)
 4. Configure SSLTestPortal.py, especially application.secret\_key, in its configuration section and create the required paths (log, result/html and result/json in the default configuration).
