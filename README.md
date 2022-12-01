@@ -2,12 +2,12 @@
 
 This project is a web interface for [testssl.sh](https://testssl.sh/). It can be used to offer internal TLS/SSL configuration check portals, whereever the usual public tools are not applicable.
 
-![Webfrontend](/screenshots/testssl.sh-webfrontend.png)
-![Result](/screenshots/testssl.sh-result.png)
+![Webfrontend](screenshots/testssl.sh-webfrontend.png)
+![Result](screenshots/testssl.sh-result.png)
 
 ## Installation
 
-1. Clone the [testssl.sh-webfrontend](https://github.com/TKCERT/testssl.sh-webfrontend) repository with its main dependency [testssl.sh](https://github.com/drwetter/testssl.sh) by invocation of `git clone --recursive https://github.com/TKCERT/testssl.sh-webfrontend.git`.
+1. Clone the [testssl.sh-webfrontend](https://github.com/lugg1/testssl.sh-webfrontend) repository with its main dependency [testssl.sh](https://github.com/drwetter/testssl.sh) by invocation of `git clone --recursive https://github.com/lugg1/testssl.sh-webfrontend.git`.
 2. Install Python 3 (`apt-get install python3`) and the Python module Flask by running `pip3 install flask`.
 3. Install [aha](https://github.com/theZiz/aha) (`apt-get install aha`)
 4. Configure SSLTestPortal.py, especially application.secret\_key, in its configuration section and create the required paths (log, result/html and result/json in the default configuration).
@@ -34,5 +34,6 @@ You still have to autostart the script on boot. This can be done manually in a s
 
 ## Docker
 
-Markus Kraus ([@vMarkus_K](https://twitter.com/vMarkus_K)) created a [Docker
-Image](https://hub.docker.com/r/mycloudrevolution/testssl-webfrontend/).
+1. Create your container image by command `docker build --no-cache -t testssl.sh-webfrontend:latest .` on your local machine.
+2. Start the container `docker run -p 8080:8080 --rm testssl.sh-webfrontend:latest`
+3. Open the browser URL [http://localhost:8080](http://localhost:8080/)

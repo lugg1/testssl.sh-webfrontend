@@ -27,33 +27,36 @@ logDir = "log"
 resultDirJSON = "result/json"
 resultDirHTML = "result/html"
 checkCmd = "testssl.sh/testssl.sh"
-checkArgs = ["--quiet", "--color", "3", "--logfile=" + logDir, "--jsonfile=" + resultDirJSON]
+checkArgs = ["--quiet", "--color", "3", "--logfile=" + logDir, "--jsonfile=" + resultDirJSON, "--fast"]
 checkTimeout = 300
 rendererCmd = "aha"
-rendererArgs = ["--stylesheet", "--word-wrap", "--no-header" ,"--black"]
+rendererArgs = ["--stylesheet", "--word-wrap", "--no-header", "--black"]
 rendererTimeout = 30
-protocols = ["ftp", "smtp", "lmtp", "pop3", "imap", "xmpp", "xmpp-server", "ldap", "nntp", "postgres", "mysql"] #"telnet", 
+protocols = ["ftp", "smtp", "lmtp", "pop3", "imap", "xmpp", "xmpp-server", "ldap", "nntp", "postgres", "mysql"]
 reHost = re.compile(r"^[a-zA-Z0-9_][a-zA-Z0-9_\-]+(\.[a-zA-Z0-9_\-]+)*$")
 preflightRequest = True
 preflightTimeout = 10
 application.debug = False
-application.secret_key = "NrfzdBMXDOLomWZxPQIHGvgUcFRyAabY"
+application.secret_key = urandom(32)
+
+
 #####################
 
 def escape_ansi(line):
     ansi_escape = re.compile(r'(\x9B|\x1B\[)[0-?]*[ -\/]*[@-~]')
     return ansi_escape.sub('', line)
 
+
 @application.route("/", methods=['GET', 'POST'])
 def main():
-    if request.method == 'GET':                         # Main Page
+    if request.method == 'GET':  # Main Page
         return render_template("main.html")
-    elif request.method == 'POST':                      # Perform Test
+    elif request.method == 'POST':  # Perform Test
         # Sanity checks of request values
         ok = True
         host = request.form['host']
         if not reHost.match(host):
-            flash("Wrong host name!")
+            flash("Invalid host name ::: '" + str(host) + "'")
             ok = False
         if host == "localhost" or host.find("127.") == 0:
             flash("I was already pentested ;)")
@@ -61,8 +64,8 @@ def main():
 
         try:
             port = int(request.form['port'])
-            if not (port >= 0 and port <= 65535):
-                flash("Wrong port number!")
+            if not (1 <= port <= 65535):
+                flash("Invalid port number!")
                 ok = False
         except:
             flash("Port number must be numeric")
@@ -72,13 +75,12 @@ def main():
             starttls = True
             protocol = request.form['protocol']
             if starttls and protocol not in protocols:
-                flash("Wrong protocol!")
+                flash("Invalid protocol ::: '" + str(protocol) + "' ")
                 ok = False
         else:
             starttls = False
 
-
-        #if not ('confirm' in request.form and request.form['confirm'] == "yes"):
+        # if not ('confirm' in request.form and request.form['confirm'] == "yes"):
         #    flash("You must confirm that you are authorized to scan the given system!")
         #    ok = False
 
@@ -98,7 +100,7 @@ def main():
                 s.connect((host, port))
                 s.close()
             except:
-                flash("Connection test failed!")
+                flash("Connection test failed of host:port ::: '" + str(host) + ":" + str(port) + "'")
                 ok = False
 
         if not ok:
@@ -118,10 +120,10 @@ def main():
             check = Popen(args, stdout=PIPE, stderr=PIPE)
             output, err = check.communicate(timeout=checkTimeout)
             if check.returncode > 10:
-                #output = err
+                output = err
                 flash("SSL Scan failed with error code " + str(check.returncode) + " - " + escape_ansi(str(err, 'utf-8')))
         except TimeoutExpired:
-            flash("SSL Scan timed out")
+            flash("SSL Scan timed out after " + str(checkTimeout) + " seconds of host name '" + str(host) + "'")
             check.terminate()
 
         html = "<pre>" + str(output, 'utf-8') + "</pre>"
@@ -139,12 +141,15 @@ def main():
 
         ts = datetime.now()
         try:
-            resultfile = open(resultDirHTML + "/" + ts.strftime("%Y%m%d-%H%M%S.%f") + "-" + host + "_" + str(port) + ".html", mode='w')
+            resultfile = open(
+                resultDirHTML + "/" + ts.strftime("%Y%m%d-%H%M%S.%f") + "-" + host + "_" + str(port) + ".html",
+                mode='w')
             resultfile.write(str(html, 'utf-8'))
             resultfile.close()
         except:
             pass
         return render_template("result.html", result=str(html, 'utf-8'))
+
 
 if __name__ == "__main__":
     application.run()
